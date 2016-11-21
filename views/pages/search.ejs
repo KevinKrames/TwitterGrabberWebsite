@@ -1,0 +1,54 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <main>
+        <div class="jumbotron">
+            <h3>Search:</h3>
+                <form method="post" action="/submit">
+                <h5>Type:</h5>
+                <select name="type">
+                  <option value="tweets">Tweets</option>
+                  <option value="users">Users</option>
+                </select>
+                <h5>Keywords: (separate by spaces)</h5>
+                <input type="text" name="keywords" size="75" class="form-control" value= "" >
+                <h5>Username Contains:</h5>
+                <input type="text" name="username" size="75" class="form-control" value= "" >
+                <h5>Retweets:</h5>
+                <input type="text" name="retweets" size="75" class="form-control" value= "" >
+                <h5>Favorites:</h5>
+                <input type="text" name="favorites" size="75" class="form-control" value= "" >
+                <h5>Region:</h5>
+                <input type="text" name="region" size="75" class="form-control" value= "" >
+                <h5>Language:</h5>
+                <input type="text" name="language" size="75" class="form-control" value= "" >
+                <input type="submit" value="Search">
+                </form>
+
+            <h3>Raw Query:</h3>
+                <form method="post" action="/raw_query">
+
+
+                <input type="text" name="query" size="75" class="form-control" value= "select count (*) as total from TWEET" >
+
+                <input type="submit" value="Search">
+                </form>
+        </div>
+    </main>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+    
+</body>
+</html>

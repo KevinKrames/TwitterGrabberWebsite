@@ -12,21 +12,23 @@
     </header>
 
     <main>
-        <div class="jumbotron">
+        <div class="jumbotron col-sm-12">
         <h1>Results:</h1>
             <div class="row">
-                <div class="col-sm-12">
+                <div class="">
                     
-                    <table border="1" width="100%">
-   <tr>
-      <th>Tweet Text</th><th>Retweets</th><th>Favorites</th>
+                    <table border="1">
+   <tr height="40">
+      <% for (var j = 0; j < headers.length; j++) { %>
+      <th><%= headers[j].name %></th>
+      <% } %>
    </tr>
 
    <% for (var i = 0; i < data.length; /* I save the data in a variable 'quotation', I don't know how you named your variable  */  i++) { %>
     <tr>
-      <td width="50%"><%= data[i][2] %></td>
-      <td width="25%"><%= data[i][5] %></td>
-      <td width="25%"><%= data[i][6] %></td>
+      <% for (var j = 0; j < data[i].length; j++) { %>
+      <td><%= data[i][j] %></td>
+      <% } %>
     </tr>    
    <% } %>
 </table>

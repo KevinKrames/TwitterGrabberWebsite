@@ -30,12 +30,42 @@ app.get('/', function(request, response) {
     response.render('pages/index');
 });
 
-app.post('/submit', function (req, res) {
+app.get('/about', function(req, res) {
+    res.render('pages/about');
+});
+app.get('/search', function(req, res) {
+    res.render('pages/search');
+});
 
+app.post('/submit', function (req, res) {
+  var query = null;
+  if (req.body.keywords != null) {
+    var keywordsArray = req.body.keywords.split(" ");
+    var arrayLength = keywordsArray.length;
+    var query = "SELECT * FROM Tweet t WHERE ";
+    for (var i = 0; i < arrayLength; i++) {
+        if (i != 0) {
+          query = query + " AND "
+        }
+        query = query + "LOWER(t.tweet_text) LIKE \'%" + keywordsArray[i].toLowerCase() + "%\'";
+    }
+     
+
+    console.log("Keywords: " + query);
+  }
+
+    if (query != null) {
+      var data = { values:"", headers:""};
+    	queryOracle(query, data, res, false);
+    }
+});
+
+app.post('/raw_query', function (req, res) {
     console.log("Query: " + req.body.query);
+
     if (req.body.query != null) {
       var data = { values:"", headers:""};
-    	queryOracle(req.body.query, data, res);
+      queryOracle(req.body.query, data, res, true);
     }
 });
 
@@ -44,7 +74,7 @@ app.listen(app.get('port'), function() {
 });
 
 
-function queryOracle(queryString, temp, res) {
+function queryOracle(queryString, temp, res, raw) {
   oracledb.getConnection({  
      user: config.database.user,
      password: config.database.password,
@@ -67,14 +97,18 @@ function queryOracle(queryString, temp, res) {
           temp.headers = result.metaData;
           temp.values = result.rows;
           doRelease(connection);  
-          renderSubmitPage(temp, res);
+          renderSubmitPage(temp, res, raw);
      });  
 });  
 }
 
-function renderSubmitPage(data, res) {
+function renderSubmitPage(data, res, raw) {
       console.log(data);
-      res.render('pages/data', {'data' : data.values})
+      if (raw) {
+      res.render('pages/dataRaw', {'data' : data.values, 'headers' : data.headers});
+      } else {
+      res.render('pages/data', {'data' : data.values, 'headers' : data.headers});
+      }
 }
 function doRelease(connection) {  
      connection.release(  
